@@ -20,5 +20,5 @@ export const signup = async(req, res, next) =>{
     res.json("signip successful")
   } catch (error) {
     next(error)
-  }
+  } 
 }
