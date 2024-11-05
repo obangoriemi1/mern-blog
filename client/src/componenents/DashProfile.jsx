@@ -1,18 +1,21 @@
-import { Alert, Button, TextInput } from 'flowbite-react'
+import { Alert, Button, Modal, TextInput } from 'flowbite-react'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRef } from 'react'
-import { updateStart, updateSuccess, updateFailure } from '../redux/user/userSlice'
+import { updateStart, updateSuccess, updateFailure, deletUserStart, deleteUserSucces, deleteUserFalilue } from '../redux/user/userSlice'
+import { HiOutlineExclamationCircle } from 'react-icons/hi'
+import { data } from 'autoprefixer'
 
 
 
 export const DashProfile = () => {
-const {currentUser} = useSelector((state) => state.user)
+const {currentUser, error} = useSelector((state) => state.user)
  const [imageFile, setImageFile] = useState(null)
  const [imageUrl, setImageUrl] = useState(null)
  const [formData, setFormData] = useState({});
  const [updateUserSuccess, setUpdateUserSuccess] = useState(null);
  const [updateUserError, setUpdateUserError] = useState(null);
+ const [showModal, setShowModel] = useState(false)
  const dispatch = useDispatch()
  const filePickerRef = useRef()
 
@@ -62,6 +65,25 @@ const {currentUser} = useSelector((state) => state.user)
         setUpdateUserError(error.message);
     }
    }
+
+   const handleDeeleteUser = async() =>{
+       setShowModel(false)
+       try {
+        dispatch(deletUserStart())
+        const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+            method: "DELETE",
+        })
+        if(!res.ok){
+            dispatch(deleteUserFalilue(data.message));
+
+        }
+        else{
+            dispatch(deleteUserSucces(data))
+        }
+       } catch (error) {
+        dispatch(deleteUserFalilue(error.message))
+       }
+   }
   return (
     <div className='max-w-lg mx-auto p-3 w-full'>
         <h1 className='my-7 text-center text-3xl font-semibold '>Profile</h1>
@@ -76,7 +98,7 @@ const {currentUser} = useSelector((state) => state.user)
            <Button gradientDuoTone='tealToLime' outline type='submit'>Update</Button>
         </form>
         <div className='text-red-600 flex justify-between mt-5'>
-            <span className='cursor-pointer'>Delete Account</span>
+            <span className='cursor-pointer'onClick={() =>setShowModel(true)}>Delete Account</span>
             <span className='cursor-pointer'>Log Out</span>
         </div>
         {updateUserSuccess && (
@@ -88,7 +110,32 @@ const {currentUser} = useSelector((state) => state.user)
         <Alert color='failure' className='mt-5'>
           {updateUserError}
         </Alert>
+       
       )}
+        {error && (
+        <Alert color='failure' className='mt-5'>
+          {error}
+        </Alert>
+       
+      )}
+
+      <Modal show={showModal} onClose={() =>setShowModel(false)} popup size='md'>
+          <Modal.Header/>
+          <Modal.Body>
+            <div className="text-center">
+                <HiOutlineExclamationCircle className='h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto'/>
+                <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>Are you sure you want to delete your account</h3>
+                <div className="flex justify-center gap-4">
+                    <Button color='failure' onClick={handleDeeleteUser}>
+                         Yes Sure
+                    </Button>
+                    <Button color='grey' onClick={() => setShowModel(false)}>
+                         cancel
+                    </Button>
+                </div>
+            </div>
+          </Modal.Body>
+      </Modal>
 
 
     </div>
