@@ -2,7 +2,7 @@ import { Alert, Button, Modal, TextInput } from 'flowbite-react'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRef } from 'react'
-import { updateStart, updateSuccess, updateFailure, deletUserStart, deleteUserSucces, deleteUserFalilue } from '../redux/user/userSlice'
+import { updateStart, updateSuccess, updateFailure, deletUserStart, deleteUserSucces, deleteUserFalilue,  signoutSuccess } from '../redux/user/userSlice'
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 import { data } from 'autoprefixer'
 
@@ -84,6 +84,22 @@ const {currentUser, error} = useSelector((state) => state.user)
         dispatch(deleteUserFalilue(error.message))
        }
    }
+   const handleSignout = async(req, res, next) =>{
+         try {
+            const res = await fetch("/api/user/signout", {
+                method: "POST"
+            });
+            const data = await res.json();
+            if(!res.ok){
+                console.log(error.message)
+            }
+            else{
+               dispatch(signoutSuccess())
+            }
+         } catch (error) {
+            console.log(error.message);
+         }
+   }
   return (
     <div className='max-w-lg mx-auto p-3 w-full'>
         <h1 className='my-7 text-center text-3xl font-semibold '>Profile</h1>
@@ -99,7 +115,7 @@ const {currentUser, error} = useSelector((state) => state.user)
         </form>
         <div className='text-red-600 flex justify-between mt-5'>
             <span className='cursor-pointer'onClick={() =>setShowModel(true)}>Delete Account</span>
-            <span className='cursor-pointer'>Log Out</span>
+            <span className='cursor-pointer' onClick={handleSignout}>Log Out</span>
         </div>
         {updateUserSuccess && (
         <Alert color='success' className='mt-5'>
