@@ -5,11 +5,12 @@ import { useRef } from 'react'
 import { updateStart, updateSuccess, updateFailure, deletUserStart, deleteUserSucces, deleteUserFalilue,  signoutSuccess } from '../redux/user/userSlice'
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 import { data } from 'autoprefixer'
+import { Link } from 'react-router-dom'
 
 
 
 export const DashProfile = () => {
-const {currentUser, error} = useSelector((state) => state.user)
+const {currentUser, error, loading} = useSelector((state) => state.user)
  const [imageFile, setImageFile] = useState(null)
  const [imageUrl, setImageUrl] = useState(null)
  const [formData, setFormData] = useState({});
@@ -111,7 +112,18 @@ const {currentUser, error} = useSelector((state) => state.user)
             <TextInput type='text' id='username' placeholder='username' defaultValue={currentUser.username}onChange={handleChange}/>
             <TextInput type='email' id='email' placeholder='email' defaultValue={currentUser.email}onChange={handleChange}/>
             <TextInput type='password' id='password' onChange={handleChange}/>
-           <Button gradientDuoTone='tealToLime' outline type='submit'>Update</Button>
+           <Button gradientDuoTone='tealToLime' outline type='submit' disabled={loading}>
+            {loading ? "loading...": "Update"}
+           </Button> 
+           {
+            currentUser.isAdmin && (
+                <Link to={"/create-post"}>
+                  <Button type='button' gradientDuoTone='tealToLime' className='w-full'>
+                    Create post
+                 </Button>
+                </Link>
+            )
+           }
         </form>
         <div className='text-red-600 flex justify-between mt-5'>
             <span className='cursor-pointer'onClick={() =>setShowModel(true)}>Delete Account</span>
