@@ -22,7 +22,7 @@ export const CreatePost = () => {
                 <FileInput type="file" accept='image/*'/>
                 <Button  type='button' gradientDuoTone='tealToLime' size='sm' outline>Upload Image</Button>
             </div>
-            <ReactQuill theme='snow' placeholder='write something'  className='h-72 mb-12' required/>
+            <ReactQuill theme='snow' placeholder='write something.....'  className='h-72 mb-12' required/>
             <Button type='submit' gradientDuoTone='tealToLime'>Publish</Button>
 
         </form>
