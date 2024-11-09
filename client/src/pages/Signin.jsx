@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 const Signin = () => {
     const [formData, setFormData] = useState({})
    
-    const {loading, error: errorMessage} = useSelector(state => state.user);
+    const { error: errorMessage} = useSelector(state => state.user);
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const handleChange = (e) =>{
@@ -63,15 +63,8 @@ const Signin = () => {
                         <Label value='Your password' ></Label>
                         <TextInput type='password' placeholder='*****' id='password' onChange={handleChange}/>
                     </div>
-                    <Button type='submit' gradientDuoTone='tealToLime' disabled={loading}>
-                       {
-                        loading ? (
-                            <>
-                            <Spinner size='sm'/>
-                            <span className='pl-3'>Loading....</span>
-                            </>
-                        ) : "Sign in"
-                       }
+                    <Button type='submit' gradientDuoTone='tealToLime' >
+                      Sign in
                     </Button>
                     {/* <OAuth/> */}
                 </form>
